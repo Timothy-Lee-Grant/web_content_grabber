@@ -68,20 +68,25 @@ We're looking for...
 
 ```
 web_content_grabber/
-├── manifest.json          # MV3 config
+├── manifest.json              # MV3 config
 ├── src/
-│   ├── background.js       # service worker (downloads, messaging)
-│   ├── content.js          # page extraction + element picker
-│   ├── popup.html          # toolbar UI
-│   ├── popup.js            # popup logic
+│   ├── background.js          # minimal service worker (lifecycle hooks)
+│   ├── popup.html             # toolbar UI
+│   ├── popup.css              # popup styling (light/dark)
+│   ├── popup.js               # popup logic: extract, frontmatter, copy, download
 │   └── lib/
-│       ├── readability.js  # main-content extraction
-│       └── turndown.js     # HTML → Markdown
-├── icons/
+│       ├── htmlToMarkdown.js  # native HTML → Markdown converter (injected)
+│       └── extractor.js       # content auto-detect, JSON-LD metadata, manual picker (injected)
+├── icons/                     # 16/32/48/128 px
 ├── README.md
 ├── IMPLEMENTATION_PLAN.md
 └── DEPLOYMENT_PLAN.md
 ```
+
+> Implementation note: the content extraction and HTML→Markdown conversion are
+> implemented natively in `src/lib/` rather than vendoring Readability/Turndown.
+> This keeps the extension fully self-contained with **no remote or third-party
+> code** — which is simpler and friendlier for Chrome Web Store review.
 
 ## Privacy
 

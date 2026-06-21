@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Grabber</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="bar">
+    <span class="brand">Job Grabber</span>
+    <div class="modes">
+      <button id="modeAuto" class="mode active" type="button">Auto</button>
+      <button id="modeManual" class="mode" type="button">Select element</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="fields">
+      <label>Title<input id="fTitle" type="text" placeholder="Job title" /></label>
+      <label>Company<input id="fCompany" type="text" placeholder="Company" /></label>
+      <label>Location<input id="fLocation" type="text" placeholder="Location" /></label>
+    </div>
+
+    <details id="fmWrap">
+      <summary>Frontmatter preview</summary>
+      <pre id="fmPreview"></pre>
+    </details>
+
+    <label class="bodyLabel">Markdown
+      <textarea id="md" spellcheck="false" placeholder="Extracted job description will appear here…"></textarea>
+    </label>
+
+    <div class="actions">
+      <button id="btnCopy" class="primary" type="button">Copy</button>
+      <button id="btnDownload" class="primary" type="button">Download .md</button>
+      <button id="btnReextract" class="ghost" type="button" title="Re-run auto extraction">↻</button>
+    </div>
+
+    <p id="status" class="status"></p>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
