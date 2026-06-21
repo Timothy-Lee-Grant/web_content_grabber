@@ -151,6 +151,38 @@
     }
   }
 
+  // Section labels that job boards render inline as bold; promote to headings.
+  var LABELS = [
+    "About the job", "About the role", "About this role", "About the position",
+    "Overview", "Summary", "The role", "Job description",
+    "Responsibilities", "Key responsibilities", "What you'll do",
+    "What you will do", "What you'll be doing", "Duties",
+    "Qualifications", "Required Qualifications", "Minimum Qualifications",
+    "Basic Qualifications", "Preferred Qualifications", "Other Requirements",
+    "Requirements", "Skills", "Experience",
+    "Benefits", "Perks", "Compensation", "What we offer", "Nice to have"
+  ];
+
+  function promoteLabels(md) {
+    for (var i = 0; i < LABELS.length; i++) {
+      var label = LABELS[i];
+      var esc = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      // **Label** (with optional trailing colon / glued text) -> ### Label
+      var re = new RegExp("\\*\\*\\s*" + esc + "\\s*:?\\s*\\*\\*\\s*:?\\s*", "gi");
+      md = md.replace(re, "\n\n### " + label + "\n\n");
+    }
+    return md;
+  }
+
+  function postProcess(md) {
+    md = promoteLabels(md);
+    // Bold label glued directly to following sentence: "**X**As ..." -> break.
+    md = md.replace(/\*\*([^*\n]{2,80})\*\*(?=[A-Z])/g, "**$1**\n\n");
+    // Inline " - " enumerations after a sentence -> real bullet lines.
+    md = md.replace(/([.\w])\s-\s(?=[A-Z][a-z])/g, "$1\n- ");
+    return md;
+  }
+
   function htmlToMarkdown(root) {
     if (!root) return "";
     var md = processNode(root);
@@ -158,6 +190,7 @@
       // preserve markdown hard breaks (two trailing spaces) but trim other trailing space
       return m.indexOf("  \n") === 0 ? "  \n" : "\n";
     });
+    md = postProcess(md);
     md = md.replace(/\n{3,}/g, "\n\n").trim();
     return md;
   }
